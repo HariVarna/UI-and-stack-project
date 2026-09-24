@@ -249,6 +249,208 @@ body {
     border-color: var(--text-secondary);
 }
 
+/* Flash Messages Container */
+.flash-messages-container {
+    margin-bottom: 1.5rem;
+}
+
+.alert {
+    padding: 0.9rem 1.2rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid transparent;
+}
+
+.alert-success {
+    background-color: var(--success-bg);
+    color: var(--success-color);
+    border-color: rgba(63, 185, 80, 0.3);
+}
+
+.alert-danger {
+    background-color: rgba(248, 81, 73, 0.15);
+    color: var(--danger-color);
+    border-color: rgba(248, 81, 73, 0.3);
+}
+
+/* Auth Layout & Card */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.auth-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 480px;
+    padding: 2.5rem 2rem;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+}
+
+.auth-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Form Elements */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #0d1117;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    outline: none;
+}
+
+.form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(56, 139, 253, 0.25);
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 2px rgba(248, 81, 73, 0.2);
+}
+
+.form-control.is-valid {
+    border-color: var(--success-color);
+}
+
+/* Date input styling adjustments */
+input[type="date"].form-control {
+    color-scheme: dark;
+}
+
+/* Password Toggle Button */
+.input-wrapper .password-toggle-btn {
+    position: absolute;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.35rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    user-select: none;
+}
+
+.input-wrapper .password-toggle-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+.input-wrapper .password-toggle-btn:focus {
+    outline: 2px solid var(--accent-color);
+}
+
+.input-wrapper input[type="password"],
+.input-wrapper input[type="text"] {
+    padding-right: 2.75rem;
+}
+
+/* Validation Feedback Text */
+.error-feedback {
+    font-size: 0.82rem;
+    color: var(--danger-color);
+    font-weight: 500;
+    min-height: 1.1rem;
+    display: flex;
+    align-items: center;
+    transition: opacity var(--transition-fast);
+}
+
+.error-feedback:empty {
+    display: none;
+}
+
+/* Form Actions */
+.form-actions {
+    margin-top: 0.75rem;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-size: 1rem;
+}
+
+/* Auth Card Footer */
+.auth-footer {
+    margin-top: 1.75rem;
+    text-align: center;
+    border-top: 1px solid var(--card-border);
+    padding-top: 1.25rem;
+}
+
+.auth-footer-text {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.auth-link {
+    color: var(--accent-hover);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
 /* Footer */
 .site-footer {
     border-top: 1px solid var(--card-border);
@@ -276,6 +478,9 @@ body {
     }
     .hero-title {
         font-size: 1.75rem;
+    }
+    .auth-card {
+        padding: 2rem 1.25rem;
     }
     .footer-content {
         flex-direction: column;

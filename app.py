@@ -2,7 +2,7 @@
 app.py - Main entry point for the Flask application.
 """
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request, flash, redirect, url_for
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -18,6 +18,21 @@ def home():
     Home page route rendering the initial landing page.
     """
     return render_template("index.html")
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """
+    Placeholder registration route.
+    Handles GET to display the frontend registration form,
+    and POST to handle placeholder submission without saving data.
+    """
+    if request.method == "POST":
+        # Placeholder response - no database storage or authentication logic implemented yet
+        flash("Frontend validation passed! Placeholder submission received (no data was stored).", "success")
+        return redirect(url_for("register"))
+
+    return render_template("register.html")
 
 
 if __name__ == "__main__":
