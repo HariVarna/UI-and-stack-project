@@ -3,6 +3,7 @@ app.py - Main entry point for the Flask application.
 """
 import os
 from flask import Flask, render_template, request, flash, redirect, url_for
+from database import db
 
 # Initialize the Flask application
 app = Flask(__name__)
@@ -10,6 +11,9 @@ app = Flask(__name__)
 # Basic configuration
 # Secret key is needed for session management and flash messages (will be used in auth)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
+
+# Register database helpers and CLI commands with the Flask application
+db.init_app(app)
 
 
 @app.route("/")
