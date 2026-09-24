@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="hero-card">
+    <div class="badge-status">
+        <span class="status-indicator"></span>
+        Flask Application Active
+    </div>
+    <h1 class="hero-title">Authentication Project Foundation</h1>
+    <p class="hero-subtitle">
+        The base project structure, Jinja2 templating, custom styling, and routing are configured and operating properly.
+    </p>
+</section>
+
+<section class="grid-container">
+    <div class="info-card">
+        <div class="info-card-header">
+            <span class="info-card-icon">⚡</span>
+            <h2 class="info-card-title">Flask Server</h2>
+        </div>
+        <p class="info-card-body">
+            Minimal and scalable WSGI application setup using modern Flask standards.
+        </p>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-header">
+            <span class="info-card-icon">🎨</span>
+            <h2 class="info-card-title">Vanilla CSS Design</h2>
+        </div>
+        <p class="info-card-body">
+            Custom dark-themed, responsive design system with clean CSS variables and typography.
+        </p>
+    </div>
+
+    <div class="info-card">
+        <div class="info-card-header">
+            <span class="info-card-icon">🗄️</span>
+            <h2 class="info-card-title">SQLite Database Ready</h2>
+        </div>
+        <p class="info-card-body">
+            Dedicated <code>database/</code> directory reserved for future schema and data persistence.
+        </p>
+    </div>
+</section>
+{% endblock %}
