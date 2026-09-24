@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Auth App{% endblock %} - Flask Foundation</title>
+    <title>{% block title %}AuthCore{% endblock %} - Secure Flask Authentication</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,13 +16,22 @@
     <!-- Top Navigation Bar -->
     <header class="site-header">
         <nav class="navbar">
-            <a href="{{ url_for('home') }}" class="brand-link">
+            <a href="{% if session.get('user_id') %}{{ url_for('dashboard') }}{% else %}{{ url_for('home') }}{% endif %}" class="brand-link">
                 <span class="brand-icon">🔐</span>
                 <span>AuthCore</span>
             </a>
             <ul class="nav-links">
-                <li><a href="{{ url_for('home') }}" class="nav-link">Home</a></li>
-                <li><a href="{{ url_for('register') }}" class="nav-link">Register</a></li>
+                {% if session.get('user_id') %}
+                    <li><a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a></li>
+                    <li class="user-greeting">
+                        <span class="user-badge">👤 {{ session.get('user_name') }}</span>
+                    </li>
+                    <li><a href="{{ url_for('logout') }}" class="nav-link nav-btn-logout">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('home') }}" class="nav-link">Home</a></li>
+                    <li><a href="{{ url_for('login') }}" class="nav-link">Login</a></li>
+                    <li><a href="{{ url_for('register') }}" class="nav-link nav-btn-primary">Register</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
@@ -47,8 +56,8 @@
     <!-- Footer -->
     <footer class="site-footer">
         <div class="footer-content">
-            <p>&copy; 2026 AuthCore Project Foundation. Built with Flask & SQLite.</p>
-            <p>Phase 1: Project Setup</p>
+            <p>&copy; 2026 AuthCore Authentication System. Built with Flask, SQLite & Werkzeug.</p>
+            <p>Phase 3: Core Authentication Active</p>
         </div>
     </footer>
 

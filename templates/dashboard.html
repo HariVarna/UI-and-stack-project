@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <!-- Welcome Banner Card -->
+    <div class="dashboard-header-card">
+        <div class="user-avatar-badge">
+            <span class="avatar-icon">👤</span>
+        </div>
+        <div class="dashboard-header-text">
+            <div class="badge-status">
+                <span class="status-indicator"></span>
+                Active Authenticated Session
+            </div>
+            <h1 class="dashboard-title">Welcome, {{ user['name'] }}!</h1>
+            <p class="dashboard-subtitle">Here is your account profile and security overview.</p>
+        </div>
+    </div>
+
+    <!-- User Information Grid -->
+    <div class="dashboard-grid">
+        <!-- Profile Details Card -->
+        <div class="profile-card">
+            <div class="card-header">
+                <h2 class="card-title">Profile Information</h2>
+                <span class="card-tag">Verified User</span>
+            </div>
+            
+            <div class="profile-details-list">
+                <div class="profile-item">
+                    <span class="profile-label">Full Name</span>
+                    <span class="profile-value">{{ user['name'] }}</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">Mail ID</span>
+                    <span class="profile-value">{{ user['email'] }}</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">Date of Birth</span>
+                    <span class="profile-value">{{ user['dob'] }}</span>
+                </div>
+                <div class="profile-item">
+                    <span class="profile-label">Member Since</span>
+                    <span class="profile-value">{{ user['created_at'] }} UTC</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security & Session Summary Card -->
+        <div class="profile-card">
+            <div class="card-header">
+                <h2 class="card-title">Security Status</h2>
+                <span class="card-tag status-secure">Protected</span>
+            </div>
+
+            <div class="security-info-body">
+                <p class="security-desc">
+                    Your account is secured with Werkzeug one-way cryptographic hashing (PBKDF2/Scrypt).
+                </p>
+                <div class="security-checklist">
+                    <div class="check-item">
+                        <span class="check-icon">✓</span>
+                        <span>Password hash stored safely in SQLite</span>
+                    </div>
+                    <div class="check-item">
+                        <span class="check-icon">✓</span>
+                        <span>Session cookie authenticated</span>
+                    </div>
+                    <div class="check-item">
+                        <span class="check-icon">✓</span>
+                        <span>Server-side route protection enforced</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-actions">
+                    <a href="{{ url_for('logout') }}" class="btn btn-danger btn-block">
+                        <span>Log Out of Account</span>
+                        <span>&rarr;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

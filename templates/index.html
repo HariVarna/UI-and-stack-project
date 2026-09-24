@@ -10,10 +10,16 @@
     </div>
     <h1 class="hero-title">Authentication Project Foundation</h1>
     <p class="hero-subtitle">
-        The base project structure, Jinja2 templating, custom styling, and routing are configured and operating properly.
+        A secure, modular authentication system built from scratch with Python, Flask, Jinja2, Vanilla CSS, and SQLite.
     </p>
-    <div style="margin-top: 1.5rem;">
-        <a href="{{ url_for('register') }}" class="btn btn-primary">Go to Registration Page &rarr;</a>
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        {% if session.get('user_id') %}
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Go to Dashboard &rarr;</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-secondary">Log Out</a>
+        {% else %}
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Create an Account &rarr;</a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">Sign In</a>
+        {% endif %}
     </div>
 </section>
 
