@@ -4,8 +4,11 @@ app.py - Main Flask Application for AuthCore Authentication System.
 import functools
 import os
 import re
-from datetime import datetime
+import secrets
+from datetime import datetime, timedelta
 import sqlite3
+
+from dotenv import load_dotenv
 from flask import (
     Flask,
     render_template,
@@ -16,14 +19,25 @@ from flask import (
     session,
     g
 )
+from flask_wtf.csrf import CSRFProtect, CSRFError
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import db
+
+# Load environment variables from .env file if present
+load_dotenv()
 
 # Initialize the Flask application
 app = Flask(__name__)
 
-# Basic configuration
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production-authcore-2026")
+# Security & Session Configuration
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", secrets.token_hex(32))
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = os.environ.get("SESSION_COOKIE_SECURE", "0") in ("1", "true", "True")
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=2)
+
+# Enable CSRF Protection across all POST/PUT/DELETE forms
+csrf = CSRFProtect(app)
 
 # Register database helpers and CLI commands with the Flask application
 db.init_app(app)
@@ -41,6 +55,33 @@ def login_required(view):
             return redirect(url_for("login"))
         return view(**kwargs)
     return wrapped_view
+
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    """
+    Gracefully handle CSRF token validation failures without exposing stack traces.
+    """
+    flash("Session security token expired or invalid. Please try submitting the form again.", "danger")
+    # Redirect safely based on origin or default to login
+    return redirect(request.referrer or url_for("login"))
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    """
+    Custom 404 error handler.
+    """
+    return render_template("index.html"), 404
+
+
+@app.errorhandler(500)
+def internal_error(error):
+    """
+    Custom 500 error handler to prevent stack trace leaks.
+    """
+    flash("An unexpected server error occurred. Please try again later.", "danger")
+    return redirect(url_for("home")), 500
 
 
 @app.route("/")
@@ -76,13 +117,17 @@ def register():
             errors.append("Full name is required.")
         elif len(name) < 2:
             errors.append("Name must be at least 2 characters long.")
+        elif len(name) > 50:
+            errors.append("Name cannot exceed 50 characters.")
         elif not re.match(r"^[a-zA-Z\s'-]+$", name):
             errors.append("Name can only contain letters, spaces, hyphens, and apostrophes.")
 
         # 2. Validate Email
-        email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$"
         if not email:
             errors.append("Mail ID is required.")
+        elif len(email) > 120:
+            errors.append("Email address cannot exceed 120 characters.")
         elif not re.match(email_pattern, email):
             errors.append("Please enter a valid email address.")
 
@@ -105,6 +150,8 @@ def register():
             errors.append("Password is required.")
         elif len(password) < 8:
             errors.append("Password must be at least 8 characters long.")
+        elif len(password) > 128:
+            errors.append("Password cannot exceed 128 characters.")
 
         # 5. Validate Password Confirmation
         if not confirm_password:
@@ -121,7 +168,11 @@ def register():
         # 6. Database duplicate check & secure insertion
         try:
             database = db.get_db()
-            existing_user = database.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()
+            existing_user = database.execute(
+                "SELECT id FROM users WHERE email = ?", 
+                (email,)
+            ).fetchone()
+            
             if existing_user:
                 flash("An account with this email already exists. Please log in.", "danger")
                 return render_template("register.html", name=name, email=email, dob=dob)
@@ -129,7 +180,7 @@ def register():
             # Securely hash password using Werkzeug
             password_hash = generate_password_hash(password)
 
-            # Insert new user into SQLite database
+            # Insert new user into SQLite database using parameterized query
             database.execute(
                 "INSERT INTO users (name, email, dob, password_hash) VALUES (?, ?, ?, ?)",
                 (name, email, dob, password_hash)
@@ -170,15 +221,20 @@ def login():
 
         try:
             database = db.get_db()
-            user = database.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+            # Parameterized query protects against SQL injection
+            user = database.execute(
+                "SELECT id, name, email, password_hash FROM users WHERE email = ?", 
+                (email,)
+            ).fetchone()
 
-            # Verify email presence and password hash securely
+            # Constant-time comparison / secure verification against hash
             if user is None or not check_password_hash(user["password_hash"], password):
                 flash("Invalid email or password.", "danger")
                 return render_template("login.html", email=email)
 
-            # Establish session
+            # Establish new session
             session.clear()
+            session.permanent = True
             session["user_id"] = user["id"]
             session["user_name"] = user["name"]
             session["user_email"] = user["email"]
@@ -227,5 +283,6 @@ def logout():
 
 
 if __name__ == "__main__":
-    # Run development server
-    app.run(debug=True, host="127.0.0.1", port=5000)
+    # Determine debug mode from environment (defaults to False for production safety)
+    debug_mode = os.environ.get("FLASK_DEBUG", "0") in ("1", "true", "True")
+    app.run(debug=debug_mode, host="127.0.0.1", port=5000)

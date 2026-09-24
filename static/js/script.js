@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function validateEmail() {
             const value = emailInput.value.trim();
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
 
             if (!value) {
                 showError(emailInput, emailError, "Mail ID is required.");
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function validateLoginEmail() {
             const value = loginEmailInput.value.trim();
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$/;
 
             if (!value) {
                 showError(loginEmailInput, loginEmailError, "Mail ID is required.");

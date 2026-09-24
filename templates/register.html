@@ -11,6 +11,9 @@
         </div>
 
         <form id="registration-form" action="{{ url_for('register') }}" method="POST" class="auth-form" novalidate>
+            <!-- CSRF Protection Token -->
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
             <!-- Name Field -->
             <div class="form-group">
                 <label for="name" class="form-label">Full Name</label>
@@ -23,6 +26,7 @@
                         placeholder="e.g. Jane Doe" 
                         value="{{ name or '' }}"
                         autocomplete="name"
+                        maxlength="50"
                         required
                     >
                 </div>
@@ -41,6 +45,7 @@
                         placeholder="e.g. jane.doe@example.com" 
                         value="{{ email or '' }}"
                         autocomplete="email"
+                        maxlength="120"
                         required
                     >
                 </div>
@@ -74,6 +79,7 @@
                         class="form-control" 
                         placeholder="At least 8 characters" 
                         autocomplete="new-password"
+                        maxlength="128"
                         required
                     >
                     <button 
@@ -100,6 +106,7 @@
                         class="form-control" 
                         placeholder="Re-enter your password" 
                         autocomplete="new-password"
+                        maxlength="128"
                         required
                     >
                     <button 
